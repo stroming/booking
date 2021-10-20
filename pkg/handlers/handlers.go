@@ -1,20 +1,19 @@
 package handlers
 
 import (
+	"github.com/tsawler/bookings-app/pkg/config"
+	"github.com/tsawler/bookings-app/pkg/models"
+	"github.com/tsawler/bookings-app/pkg/render"
 	"net/http"
-
-	"github.com/stroming/booking/pkg/config"
-	"github.com/stroming/booking/pkg/models"
-	"github.com/stroming/booking/pkg/render"
 )
+
+// Repo the repository used by the handlers
+var Repo *Repository
 
 // Repository is the repository type
 type Repository struct {
 	App *config.AppConfig
 }
-
-// Repo the repository used by the handlers
-var Repo *Repository
 
 // NewRepo creates a new repository
 func NewRepo(a *config.AppConfig) *Repository {
@@ -30,8 +29,9 @@ func NewHandlers(r *Repository) {
 
 // Home is the handler for the home page
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	remoteIp := r.RemoteAddr
-	m.App.Session.Put(r.Context(), "remote_ip", remoteIp)
+	remoteIP := r.RemoteAddr
+	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+
 	render.RenderTemplate(w, "home.page.tmpl", &models.TemplateData{})
 }
 
@@ -41,8 +41,8 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	stringMap := make(map[string]string)
 	stringMap["test"] = "Hello, again"
 
-	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
-	stringMap["remote_ip"] = remoteIp
+	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
+	stringMap["remote_ip"] = remoteIP
 
 	// send data to the template
 	render.RenderTemplate(w, "about.page.tmpl", &models.TemplateData{

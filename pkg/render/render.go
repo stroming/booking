@@ -3,13 +3,12 @@ package render
 import (
 	"bytes"
 	"fmt"
+	"github.com/tsawler/bookings-app/pkg/config"
+	"github.com/tsawler/bookings-app/pkg/models"
 	"html/template"
 	"log"
 	"net/http"
 	"path/filepath"
-
-	"github.com/stroming/booking/pkg/config"
-	"github.com/stroming/booking/pkg/models"
 )
 
 var functions = template.FuncMap{}

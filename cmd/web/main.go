@@ -2,15 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/alexedwards/scs/v2"
+	"github.com/tsawler/bookings-app/pkg/config"
+	"github.com/tsawler/bookings-app/pkg/handlers"
+	"github.com/tsawler/bookings-app/pkg/render"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/stroming/booking/pkg/config"
-	"github.com/stroming/booking/pkg/handlers"
-	"github.com/stroming/booking/pkg/render"
-
-	"github.com/alexedwards/scs/v2"
 )
 
 const portNumber = ":8080"
@@ -20,11 +18,13 @@ var session *scs.SessionManager
 
 // main is the main function
 func main() {
-	// Change this value when app in prod
+	// change this to true when in production
 	app.InProduction = false
 
+	// set up the session
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true
 	session.Cookie.SameSite = http.SameSiteLaxMode
 	session.Cookie.Secure = app.InProduction
 
@@ -43,7 +43,7 @@ func main() {
 
 	render.NewTemplates(&app)
 
-	fmt.Printf("Staring application on port %s", portNumber)
+	fmt.Println(fmt.Sprintf("Staring application on port %s", portNumber))
 
 	srv := &http.Server{
 		Addr:    portNumber,
@@ -52,6 +52,6 @@ func main() {
 
 	err = srv.ListenAndServe()
 	if err != nil {
-		log.Fatal("Cannot serve ")
+		log.Fatal(err)
 	}
 }
